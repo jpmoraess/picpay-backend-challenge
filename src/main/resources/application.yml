@@ -1,0 +1,17 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: picpay-backend-challenge
+  datasource:
+    url: jdbc:h2:mem:picpay
+    username: picpay
+    password: picpay
+    driverClassName: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
