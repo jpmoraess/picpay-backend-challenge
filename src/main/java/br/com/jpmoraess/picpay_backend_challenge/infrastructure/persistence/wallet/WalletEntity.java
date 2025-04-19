@@ -1,6 +1,6 @@
 package br.com.jpmoraess.picpay_backend_challenge.infrastructure.persistence.wallet;
 
-import br.com.jpmoraess.picpay_backend_challenge.domain.WalletType;
+import br.com.jpmoraess.picpay_backend_challenge.domain.entity.WalletType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

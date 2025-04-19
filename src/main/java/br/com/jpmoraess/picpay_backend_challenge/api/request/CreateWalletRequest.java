@@ -1,6 +1,6 @@
 package br.com.jpmoraess.picpay_backend_challenge.api.request;
 
-import br.com.jpmoraess.picpay_backend_challenge.domain.WalletType;
+import br.com.jpmoraess.picpay_backend_challenge.domain.entity.WalletType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

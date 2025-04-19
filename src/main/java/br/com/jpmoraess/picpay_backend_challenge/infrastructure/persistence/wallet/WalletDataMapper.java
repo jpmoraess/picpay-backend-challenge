@@ -1,6 +1,6 @@
 package br.com.jpmoraess.picpay_backend_challenge.infrastructure.persistence.wallet;
 
-import br.com.jpmoraess.picpay_backend_challenge.domain.Wallet;
+import br.com.jpmoraess.picpay_backend_challenge.domain.entity.Wallet;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,7 +18,7 @@ public class WalletDataMapper {
     }
 
     public Wallet fromEntity(WalletEntity entity) {
-        return Wallet.restoreWallet(
+        return Wallet.restore(
                 entity.getId(),
                 entity.getType(),
                 entity.getFullName(),

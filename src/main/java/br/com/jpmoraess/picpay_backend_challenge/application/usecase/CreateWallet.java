@@ -1,8 +1,8 @@
 package br.com.jpmoraess.picpay_backend_challenge.application.usecase;
 
 import br.com.jpmoraess.picpay_backend_challenge.application.repository.WalletRepository;
-import br.com.jpmoraess.picpay_backend_challenge.domain.Wallet;
-import br.com.jpmoraess.picpay_backend_challenge.domain.WalletType;
+import br.com.jpmoraess.picpay_backend_challenge.domain.entity.Wallet;
+import br.com.jpmoraess.picpay_backend_challenge.domain.entity.WalletType;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -17,7 +17,7 @@ public class CreateWallet {
     }
 
     public CreateWalletOutput execute(CreateWalletInput input) {
-        Wallet wallet = Wallet.createWallet(input.type(), input.fullName(), input.document(), input.email());
+        Wallet wallet = Wallet.create(input.type(), input.fullName(), input.document(), input.email());
         walletRepository.save(wallet);
         return CreateWalletOutput.of(wallet.getId(), wallet.getFullName());
     }

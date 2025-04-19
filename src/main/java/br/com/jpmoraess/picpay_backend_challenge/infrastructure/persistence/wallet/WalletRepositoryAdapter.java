@@ -1,7 +1,7 @@
 package br.com.jpmoraess.picpay_backend_challenge.infrastructure.persistence.wallet;
 
 import br.com.jpmoraess.picpay_backend_challenge.application.repository.WalletRepository;
-import br.com.jpmoraess.picpay_backend_challenge.domain.Wallet;
+import br.com.jpmoraess.picpay_backend_challenge.domain.entity.Wallet;
 import org.springframework.stereotype.Component;
 
 @Component

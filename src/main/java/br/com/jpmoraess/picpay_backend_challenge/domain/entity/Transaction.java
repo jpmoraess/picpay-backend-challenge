@@ -1,4 +1,4 @@
-package br.com.jpmoraess.picpay_backend_challenge.domain;
+package br.com.jpmoraess.picpay_backend_challenge.domain.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
