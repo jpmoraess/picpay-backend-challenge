@@ -1,7 +1,13 @@
 package br.com.jpmoraess.picpay_backend_challenge.infrastructure.persistence.wallet;
 
 import br.com.jpmoraess.picpay_backend_challenge.domain.entity.WalletType;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -41,7 +47,10 @@ public class WalletEntity {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public WalletEntity(UUID id, WalletType type, String fullName, String document, String email, BigDecimal balance, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    @Version
+    private Long version;
+
+    public WalletEntity(UUID id, WalletType type, String fullName, String document, String email, BigDecimal balance, LocalDateTime createdAt, LocalDateTime updatedAt, Long version) {
         this.id = id;
         this.type = type;
         this.fullName = fullName;
@@ -50,6 +59,7 @@ public class WalletEntity {
         this.balance = balance;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.version = version;
     }
 
     public WalletEntity(UUID id, WalletType type, String fullName, String document, String email, BigDecimal balance) {
@@ -126,5 +136,13 @@ public class WalletEntity {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 }

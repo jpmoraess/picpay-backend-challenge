@@ -1,6 +1,7 @@
 package br.com.jpmoraess.picpay_backend_challenge.infrastructure.persistence.wallet;
 
 import br.com.jpmoraess.picpay_backend_challenge.domain.entity.Wallet;
+import br.com.jpmoraess.picpay_backend_challenge.domain.vo.Money;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,7 +14,7 @@ public class WalletDataMapper {
                 wallet.getFullName(),
                 wallet.getDocument(),
                 wallet.getEmail(),
-                wallet.getBalance()
+                wallet.getBalance().getAmount()
         );
     }
 
@@ -24,7 +25,7 @@ public class WalletDataMapper {
                 entity.getFullName(),
                 entity.getDocument(),
                 entity.getEmail(),
-                entity.getBalance()
+                new Money(entity.getBalance())
         );
     }
 }

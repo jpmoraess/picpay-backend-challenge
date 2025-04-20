@@ -1,50 +1,62 @@
 package br.com.jpmoraess.picpay_backend_challenge.domain.entity;
 
-import java.math.BigDecimal;
+import br.com.jpmoraess.picpay_backend_challenge.domain.exception.TransactionDomainException;
+import br.com.jpmoraess.picpay_backend_challenge.domain.vo.Money;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Transaction {
 
     private final UUID id;
-    private final UUID fromWalletId;
-    private final UUID toWalletId;
-    private final BigDecimal value;
+    private final UUID payerId;
+    private final UUID payeeId;
+    private final Money value;
     private final LocalDateTime dateTime;
 
-    private Transaction(UUID id, UUID fromWalletId, UUID toWalletId, BigDecimal value, LocalDateTime dateTime) {
+    private Transaction(UUID id, UUID payerId, UUID payeeId, Money value, LocalDateTime dateTime) {
         this.id = id;
-        this.fromWalletId = fromWalletId;
-        this.toWalletId = toWalletId;
+        this.payerId = payerId;
+        this.payeeId = payeeId;
         this.value = value;
         this.dateTime = dateTime;
     }
 
-    public static Transaction createTransaction(UUID fromWalletId, UUID toWalletId, BigDecimal value, LocalDateTime dateTime) {
-        if (fromWalletId == null)
-            throw new IllegalArgumentException("From wallet cannot be null");
-        if (toWalletId == null)
-            throw new IllegalArgumentException("To wallet cannot be null");
-        if (value.compareTo(BigDecimal.ZERO) <= 0)
-            throw new IllegalArgumentException("Invalid transaction value");
-        if (dateTime.isBefore(LocalDateTime.now()))
-            throw new IllegalArgumentException("Invalid date time");
-        return new Transaction(UUID.randomUUID(), fromWalletId, toWalletId, value, dateTime);
+    public static Transaction create(UUID payerId, UUID payeeId, Money value, LocalDateTime dateTime) {
+        if (payerId == null)
+            throw new TransactionDomainException("Payer cannot be null");
+        if (payeeId == null)
+            throw new TransactionDomainException("Payee cannot be null");
+        if (!value.isGreaterThanZero())
+            throw new TransactionDomainException("Invalid transaction value");
+        if (dateTime == null || dateTime.isBefore(LocalDateTime.now()))
+            throw new TransactionDomainException("Invalid date time");
+        return new Transaction(UUID.randomUUID(), payerId, payeeId, value, dateTime);
+    }
+
+    public static Transaction restore(UUID id, UUID payerId, UUID payeeId, Money value, LocalDateTime dateTime) {
+        if (id == null)
+            throw new TransactionDomainException("Transaction ID cannot be null");
+        if (payerId == null)
+            throw new TransactionDomainException("Payer cannot be null");
+        if (payeeId == null)
+            throw new TransactionDomainException("Payee cannot be null");
+        return new Transaction(id, payerId, payeeId, value, dateTime);
     }
 
     public UUID getId() {
         return id;
     }
 
-    public UUID getFromWalletId() {
-        return fromWalletId;
+    public UUID getPayerId() {
+        return payerId;
     }
 
-    public UUID getToWalletId() {
-        return toWalletId;
+    public UUID getPayeeId() {
+        return payeeId;
     }
 
-    public BigDecimal getValue() {
+    public Money getValue() {
         return value;
     }
 
