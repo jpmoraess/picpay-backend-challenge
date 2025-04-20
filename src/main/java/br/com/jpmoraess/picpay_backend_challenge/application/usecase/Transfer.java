@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Component
@@ -30,20 +29,21 @@ public class Transfer {
         Wallet payer = walletRepository.getById(input.payerId())
                 .orElseThrow(() -> new WalletNotFoundException("Source wallet not found"));
 
-        Money value = new Money(input.amount());
+        Money amount = new Money(input.amount());
 
-        if (!payer.getBalance().isGreaterThanZero() || !payer.getBalance().isGreaterThan(value))
+        if (!payer.getBalance().isGreaterThanZero() || !payer.getBalance().isGreaterThan(amount))
             throw new WalletDomainException("Insufficient funds");
 
         Wallet payee = walletRepository.getById(input.payeeId())
                 .orElseThrow(() -> new WalletNotFoundException("Destination wallet not found"));
 
-        payer.debit(value);
-        payee.credit(value);
-        walletRepository.save(payer);
-        walletRepository.save(payee);
+        payer.debit(amount);
+        walletRepository.updateBalance(payer.getId(), payer.getBalance().getAmount());
 
-        Transaction transaction = Transaction.create(payer.getId(), payee.getId(), value, LocalDateTime.now());
+        payee.credit(amount);
+        walletRepository.updateBalance(payee.getId(), payee.getBalance().getAmount());
+
+        Transaction transaction = Transaction.create(payer.getId(), payee.getId(), amount);
         transactionRepository.save(transaction);
     }
 

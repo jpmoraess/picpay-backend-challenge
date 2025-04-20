@@ -4,7 +4,6 @@ import br.com.jpmoraess.picpay_backend_challenge.domain.exception.WalletDomainEx
 import br.com.jpmoraess.picpay_backend_challenge.domain.vo.Money;
 import org.apache.commons.lang3.StringUtils;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 public class Wallet {
@@ -14,7 +13,7 @@ public class Wallet {
     private final String fullName;
     private final String document;
     private final String email;
-    private final Money balance;
+    private Money balance;
 
     private Wallet(UUID id, WalletType type, String fullName, String document, String email, Money balance) {
         this.id = id;
@@ -53,11 +52,11 @@ public class Wallet {
 
     public void debit(Money amount) {
         // TODO: add validations and business rules
-        this.balance.subtract(amount);
+        this.balance = this.balance.subtract(amount);
     }
 
     public void credit(Money amount) {
-        this.balance.add(amount);
+        this.balance = this.balance.add(amount);
     }
 
     public UUID getId() {

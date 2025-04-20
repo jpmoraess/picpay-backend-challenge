@@ -4,6 +4,7 @@ import br.com.jpmoraess.picpay_backend_challenge.application.repository.WalletRe
 import br.com.jpmoraess.picpay_backend_challenge.domain.entity.Wallet;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,7 +21,14 @@ public class WalletRepositoryAdapter implements WalletRepository {
 
     @Override
     public Wallet save(Wallet wallet) {
-        return walletDataMapper.fromEntity(walletJpaRepository.save(walletDataMapper.fromDomain(wallet)));
+        WalletEntity entity = walletDataMapper.fromDomain(wallet);
+        entity = walletJpaRepository.save(entity);
+        return walletDataMapper.fromEntity(entity);
+    }
+
+    @Override
+    public void updateBalance(UUID id, BigDecimal newBalance) {
+        walletJpaRepository.updateBalance(id, newBalance);
     }
 
     @Override

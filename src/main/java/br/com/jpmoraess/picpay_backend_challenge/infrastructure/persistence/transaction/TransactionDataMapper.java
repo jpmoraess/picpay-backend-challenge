@@ -12,7 +12,7 @@ public class TransactionDataMapper {
                 transaction.getId(),
                 transaction.getPayerId(),
                 transaction.getPayeeId(),
-                transaction.getValue().getAmount(),
+                transaction.getAmount().getAmount(),
                 transaction.getDateTime()
         );
     }
