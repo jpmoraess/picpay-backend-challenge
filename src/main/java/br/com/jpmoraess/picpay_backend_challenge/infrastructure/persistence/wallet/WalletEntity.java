@@ -2,7 +2,6 @@ package br.com.jpmoraess.picpay_backend_challenge.infrastructure.persistence.wal
 
 import br.com.jpmoraess.picpay_backend_challenge.domain.entity.WalletType;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
@@ -34,27 +33,18 @@ public class WalletEntity {
     @Column(name = "balance", nullable = false)
     private BigDecimal balance;
 
-    @Column(name = "created_at", nullable = false)
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
     @Column(name = "updated_at", nullable = false)
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @Version
-    private Long version;
-
-    public WalletEntity(Long id, WalletType type, String fullName, String document, String email, BigDecimal balance, LocalDateTime createdAt, LocalDateTime updatedAt, Long version) {
+    public WalletEntity(Long id, WalletType type, String fullName, String document, String email, BigDecimal balance, LocalDateTime updatedAt) {
         this.id = id;
         this.type = type;
         this.fullName = fullName;
         this.document = document;
         this.email = email;
         this.balance = balance;
-        this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.version = version;
     }
 
     public WalletEntity(Long id, WalletType type, String fullName, String document, String email, BigDecimal balance) {
@@ -117,28 +107,12 @@ public class WalletEntity {
         this.balance = balance;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
     }
 
     @Override

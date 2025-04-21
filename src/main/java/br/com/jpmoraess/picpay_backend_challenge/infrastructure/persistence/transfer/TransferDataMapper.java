@@ -2,12 +2,14 @@ package br.com.jpmoraess.picpay_backend_challenge.infrastructure.persistence.tra
 
 import br.com.jpmoraess.picpay_backend_challenge.domain.entity.Transfer;
 import br.com.jpmoraess.picpay_backend_challenge.domain.vo.Money;
-import org.springframework.stereotype.Component;
 
-@Component
 public class TransferDataMapper {
 
-    public TransferEntity fromDomain(Transfer transfer) {
+    private TransferDataMapper() {
+
+    }
+
+    public static TransferEntity fromDomain(Transfer transfer) {
         return new TransferEntity(
                 transfer.getId(),
                 transfer.getPayerId(),
@@ -17,7 +19,7 @@ public class TransferDataMapper {
         );
     }
 
-    public Transfer fromEntity(TransferEntity entity) {
+    public static Transfer fromEntity(TransferEntity entity) {
         return Transfer.restore(
                 entity.getId(),
                 entity.getPayerId(),

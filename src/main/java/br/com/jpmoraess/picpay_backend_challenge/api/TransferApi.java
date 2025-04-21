@@ -1,7 +1,7 @@
 package br.com.jpmoraess.picpay_backend_challenge.api;
 
 import br.com.jpmoraess.picpay_backend_challenge.api.request.TransferRequest;
-import br.com.jpmoraess.picpay_backend_challenge.application.usecase.Transfer;
+import br.com.jpmoraess.picpay_backend_challenge.application.usecase.TransferBetweenWallets;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,15 +12,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/transfers")
 public class TransferApi {
 
-    private final Transfer transfer;
+    private final TransferBetweenWallets transferBetweenWallets;
 
-    public TransferApi(Transfer transfer) {
-        this.transfer = transfer;
+    public TransferApi(TransferBetweenWallets transferBetweenWallets) {
+        this.transferBetweenWallets = transferBetweenWallets;
     }
 
     @PostMapping
     public void execute(@Valid @RequestBody TransferRequest request) {
-        Transfer.TransferInput input = Transfer.TransferInput.of(request.payerId(), request.payeeId(), request.amount());
-        transfer.execute(input);
+        TransferBetweenWallets.TransferInput input = TransferBetweenWallets.TransferInput
+                .of(request.payerId(), request.payeeId(), request.amount());
+        TransferBetweenWallets.TransferOutput output = transferBetweenWallets.execute(input);
     }
 }
