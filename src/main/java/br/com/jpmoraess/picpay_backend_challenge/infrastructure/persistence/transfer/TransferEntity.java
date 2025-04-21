@@ -1,4 +1,4 @@
-package br.com.jpmoraess.picpay_backend_challenge.infrastructure.persistence.transaction;
+package br.com.jpmoraess.picpay_backend_challenge.infrastructure.persistence.transfer;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,8 +11,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "transactions")
-public class TransactionEntity {
+@Table(name = "transfers")
+public class TransferEntity {
 
     @Id
     @Column(name = "id", updatable = false, nullable = false)
@@ -30,7 +30,7 @@ public class TransactionEntity {
     @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
 
-    public TransactionEntity(UUID id, Long payerId, Long payeeId, BigDecimal amount, LocalDateTime dateTime) {
+    public TransferEntity(UUID id, Long payerId, Long payeeId, BigDecimal amount, LocalDateTime dateTime) {
         this.id = id;
         this.payerId = payerId;
         this.payeeId = payeeId;
@@ -38,7 +38,7 @@ public class TransactionEntity {
         this.dateTime = dateTime;
     }
 
-    public TransactionEntity() {
+    public TransferEntity() {
 
     }
 
@@ -86,7 +86,7 @@ public class TransactionEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TransactionEntity that = (TransactionEntity) o;
+        TransferEntity that = (TransferEntity) o;
         return id.equals(that.id);
     }
 

@@ -1,8 +1,7 @@
 package br.com.jpmoraess.picpay_backend_challenge.application.usecase;
 
-import br.com.jpmoraess.picpay_backend_challenge.application.repository.TransactionRepository;
+import br.com.jpmoraess.picpay_backend_challenge.application.repository.TransferRepository;
 import br.com.jpmoraess.picpay_backend_challenge.application.repository.WalletRepository;
-import br.com.jpmoraess.picpay_backend_challenge.domain.entity.Transaction;
 import br.com.jpmoraess.picpay_backend_challenge.domain.entity.Wallet;
 import br.com.jpmoraess.picpay_backend_challenge.domain.exception.WalletDomainException;
 import br.com.jpmoraess.picpay_backend_challenge.domain.exception.WalletNotFoundException;
@@ -16,11 +15,11 @@ import java.math.BigDecimal;
 public class Transfer {
 
     private final WalletRepository walletRepository;
-    private final TransactionRepository transactionRepository;
+    private final TransferRepository transferRepository;
 
-    public Transfer(WalletRepository walletRepository, TransactionRepository transactionRepository) {
+    public Transfer(WalletRepository walletRepository, TransferRepository transferRepository) {
         this.walletRepository = walletRepository;
-        this.transactionRepository = transactionRepository;
+        this.transferRepository = transferRepository;
     }
 
     @Transactional
@@ -42,8 +41,8 @@ public class Transfer {
         payee.credit(amount);
         walletRepository.updateBalance(payee.getId(), payee.getBalance().getAmount());
 
-        Transaction transaction = Transaction.create(payer.getId(), payee.getId(), amount);
-        transactionRepository.save(transaction);
+        br.com.jpmoraess.picpay_backend_challenge.domain.entity.Transfer transfer = br.com.jpmoraess.picpay_backend_challenge.domain.entity.Transfer.create(payer.getId(), payee.getId(), amount);
+        transferRepository.save(transfer);
     }
 
 

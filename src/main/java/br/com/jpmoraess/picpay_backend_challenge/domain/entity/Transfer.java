@@ -1,13 +1,13 @@
 package br.com.jpmoraess.picpay_backend_challenge.domain.entity;
 
-import br.com.jpmoraess.picpay_backend_challenge.domain.exception.TransactionDomainException;
+import br.com.jpmoraess.picpay_backend_challenge.domain.exception.TransferDomainException;
 import br.com.jpmoraess.picpay_backend_challenge.domain.vo.Money;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Transaction {
+public class Transfer {
 
     private final UUID id;
     private final Long payerId;
@@ -15,7 +15,7 @@ public class Transaction {
     private final Money amount;
     private final LocalDateTime dateTime;
 
-    private Transaction(UUID id, Long payerId, Long payeeId, Money amount, LocalDateTime dateTime) {
+    private Transfer(UUID id, Long payerId, Long payeeId, Money amount, LocalDateTime dateTime) {
         this.id = id;
         this.payerId = payerId;
         this.payeeId = payeeId;
@@ -23,24 +23,24 @@ public class Transaction {
         this.dateTime = dateTime;
     }
 
-    public static Transaction create(Long payerId, Long payeeId, Money amount) {
+    public static Transfer create(Long payerId, Long payeeId, Money amount) {
         if (payerId == null)
-            throw new TransactionDomainException("Payer cannot be null");
+            throw new TransferDomainException("Payer cannot be null");
         if (payeeId == null)
-            throw new TransactionDomainException("Payee cannot be null");
+            throw new TransferDomainException("Payee cannot be null");
         if (!amount.isGreaterThanZero())
-            throw new TransactionDomainException("Invalid transaction amount");
-        return new Transaction(UUID.randomUUID(), payerId, payeeId, amount, LocalDateTime.now());
+            throw new TransferDomainException("Invalid transfer amount");
+        return new Transfer(UUID.randomUUID(), payerId, payeeId, amount, LocalDateTime.now());
     }
 
-    public static Transaction restore(UUID id, Long payerId, Long payeeId, Money amount, LocalDateTime dateTime) {
+    public static Transfer restore(UUID id, Long payerId, Long payeeId, Money amount, LocalDateTime dateTime) {
         if (id == null)
-            throw new TransactionDomainException("Transaction ID cannot be null");
+            throw new TransferDomainException("Transfer ID cannot be null");
         if (payerId == null)
-            throw new TransactionDomainException("Payer cannot be null");
+            throw new TransferDomainException("Payer cannot be null");
         if (payeeId == null)
-            throw new TransactionDomainException("Payee cannot be null");
-        return new Transaction(id, payerId, payeeId, amount, dateTime);
+            throw new TransferDomainException("Payee cannot be null");
+        return new Transfer(id, payerId, payeeId, amount, dateTime);
     }
 
     public UUID getId() {
@@ -67,7 +67,7 @@ public class Transaction {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Transaction that = (Transaction) o;
+        Transfer that = (Transfer) o;
         return id.equals(that.id);
     }
 
