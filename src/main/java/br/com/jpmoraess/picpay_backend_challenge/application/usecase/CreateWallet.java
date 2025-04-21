@@ -5,8 +5,6 @@ import br.com.jpmoraess.picpay_backend_challenge.domain.entity.Wallet;
 import br.com.jpmoraess.picpay_backend_challenge.domain.entity.WalletType;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 public class CreateWallet {
 
@@ -18,7 +16,7 @@ public class CreateWallet {
 
     public CreateWalletOutput execute(CreateWalletInput input) {
         Wallet wallet = Wallet.create(input.type(), input.fullName(), input.document(), input.email());
-        walletRepository.save(wallet);
+        wallet = walletRepository.save(wallet);
         return CreateWalletOutput.of(wallet.getId(), wallet.getFullName());
     }
 
@@ -28,8 +26,8 @@ public class CreateWallet {
         }
     }
 
-    public record CreateWalletOutput(UUID id, String fullName) {
-        public static CreateWalletOutput of(UUID id, String fullName) {
+    public record CreateWalletOutput(Long id, String fullName) {
+        public static CreateWalletOutput of(Long id, String fullName) {
             return new CreateWalletOutput(id, fullName);
         }
     }

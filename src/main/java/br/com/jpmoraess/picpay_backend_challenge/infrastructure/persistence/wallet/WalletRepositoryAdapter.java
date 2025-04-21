@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 public class WalletRepositoryAdapter implements WalletRepository {
@@ -27,12 +26,12 @@ public class WalletRepositoryAdapter implements WalletRepository {
     }
 
     @Override
-    public void updateBalance(UUID id, BigDecimal newBalance) {
+    public void updateBalance(Long id, BigDecimal newBalance) {
         walletJpaRepository.updateBalance(id, newBalance);
     }
 
     @Override
-    public Optional<Wallet> getById(UUID id) {
+    public Optional<Wallet> getById(Long id) {
         return walletJpaRepository.findById(id)
                 .map(walletDataMapper::fromEntity);
     }

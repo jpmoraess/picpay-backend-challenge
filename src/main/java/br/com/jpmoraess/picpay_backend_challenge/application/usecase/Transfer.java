@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Component
 public class Transfer {
@@ -48,8 +47,8 @@ public class Transfer {
     }
 
 
-    public record TransferInput(UUID payerId, UUID payeeId, BigDecimal amount) {
-        public static TransferInput of(UUID payerId, UUID payeeId, BigDecimal amount) {
+    public record TransferInput(Long payerId, Long payeeId, BigDecimal amount) {
+        public static TransferInput of(Long payerId, Long payeeId, BigDecimal amount) {
             return new TransferInput(payerId, payeeId, amount);
         }
     }

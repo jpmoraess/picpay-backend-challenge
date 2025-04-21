@@ -19,10 +19,10 @@ public class TransactionEntity {
     private UUID id;
 
     @Column(name = "payer_id", nullable = false)
-    private UUID payerId;
+    private Long payerId;
 
     @Column(name = "payee_id", nullable = false)
-    private UUID payeeId;
+    private Long payeeId;
 
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
@@ -30,7 +30,7 @@ public class TransactionEntity {
     @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
 
-    public TransactionEntity(UUID id, UUID payerId, UUID payeeId, BigDecimal amount, LocalDateTime dateTime) {
+    public TransactionEntity(UUID id, Long payerId, Long payeeId, BigDecimal amount, LocalDateTime dateTime) {
         this.id = id;
         this.payerId = payerId;
         this.payeeId = payeeId;
@@ -50,19 +50,19 @@ public class TransactionEntity {
         this.id = id;
     }
 
-    public UUID getPayerId() {
+    public Long getPayerId() {
         return payerId;
     }
 
-    public void setPayerId(UUID payerId) {
+    public void setPayerId(Long payerId) {
         this.payerId = payerId;
     }
 
-    public UUID getPayeeId() {
+    public Long getPayeeId() {
         return payeeId;
     }
 
-    public void setPayeeId(UUID payeeId) {
+    public void setPayeeId(Long payeeId) {
         this.payeeId = payeeId;
     }
 

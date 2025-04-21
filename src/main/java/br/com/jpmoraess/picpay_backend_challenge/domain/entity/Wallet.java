@@ -4,18 +4,18 @@ import br.com.jpmoraess.picpay_backend_challenge.domain.exception.WalletDomainEx
 import br.com.jpmoraess.picpay_backend_challenge.domain.vo.Money;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.UUID;
+import java.util.Objects;
 
 public class Wallet {
 
-    private final UUID id;
+    private final Long id;
     private final WalletType type;
     private final String fullName;
     private final String document;
     private final String email;
     private Money balance;
 
-    private Wallet(UUID id, WalletType type, String fullName, String document, String email, Money balance) {
+    private Wallet(Long id, WalletType type, String fullName, String document, String email, Money balance) {
         this.id = id;
         this.type = type;
         this.fullName = fullName;
@@ -33,10 +33,10 @@ public class Wallet {
             throw new WalletDomainException("Document is required");
         if (StringUtils.isEmpty(email))
             throw new WalletDomainException("Email is required");
-        return new Wallet(UUID.randomUUID(), type, fullName, document, email, Money.ZERO);
+        return new Wallet(null, type, fullName, document, email, Money.ZERO);
     }
 
-    public static Wallet restore(UUID id, WalletType type, String fullName, String document, String email, Money balance) {
+    public static Wallet restore(Long id, WalletType type, String fullName, String document, String email, Money balance) {
         if (id == null)
             throw new WalletDomainException("Wallet ID cannot be null");
         if (type == null)
@@ -51,7 +51,6 @@ public class Wallet {
     }
 
     public void debit(Money amount) {
-        // TODO: add validations and business rules
         this.balance = this.balance.subtract(amount);
     }
 
@@ -59,7 +58,7 @@ public class Wallet {
         this.balance = this.balance.add(amount);
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
@@ -81,5 +80,18 @@ public class Wallet {
 
     public Money getBalance() {
         return balance;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Wallet that = (Wallet) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

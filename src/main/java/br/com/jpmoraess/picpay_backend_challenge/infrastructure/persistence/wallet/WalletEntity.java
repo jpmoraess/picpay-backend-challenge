@@ -8,15 +8,15 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 @Table(name = "wallets")
 public class WalletEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
-    private UUID id;
+    private Long id;
 
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -45,7 +45,7 @@ public class WalletEntity {
     @Version
     private Long version;
 
-    public WalletEntity(UUID id, WalletType type, String fullName, String document, String email, BigDecimal balance, LocalDateTime createdAt, LocalDateTime updatedAt, Long version) {
+    public WalletEntity(Long id, WalletType type, String fullName, String document, String email, BigDecimal balance, LocalDateTime createdAt, LocalDateTime updatedAt, Long version) {
         this.id = id;
         this.type = type;
         this.fullName = fullName;
@@ -57,7 +57,7 @@ public class WalletEntity {
         this.version = version;
     }
 
-    public WalletEntity(UUID id, WalletType type, String fullName, String document, String email, BigDecimal balance) {
+    public WalletEntity(Long id, WalletType type, String fullName, String document, String email, BigDecimal balance) {
         this.id = id;
         this.type = type;
         this.fullName = fullName;
@@ -69,11 +69,11 @@ public class WalletEntity {
     public WalletEntity() {
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

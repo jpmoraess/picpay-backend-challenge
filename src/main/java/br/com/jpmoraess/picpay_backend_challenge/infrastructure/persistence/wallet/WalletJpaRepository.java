@@ -7,12 +7,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Repository
-public interface WalletJpaRepository extends JpaRepository<WalletEntity, UUID> {
+public interface WalletJpaRepository extends JpaRepository<WalletEntity, Long> {
 
     @Modifying
     @Query("UPDATE WalletEntity w SET w.balance = :newBalance WHERE w.id = :id")
-    void updateBalance(@Param("id") UUID id, @Param("newBalance") BigDecimal newBalance);
+    void updateBalance(@Param("id") Long id, @Param("newBalance") BigDecimal newBalance);
 }

@@ -4,17 +4,18 @@ import br.com.jpmoraess.picpay_backend_challenge.domain.exception.TransactionDom
 import br.com.jpmoraess.picpay_backend_challenge.domain.vo.Money;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Transaction {
 
     private final UUID id;
-    private final UUID payerId;
-    private final UUID payeeId;
+    private final Long payerId;
+    private final Long payeeId;
     private final Money amount;
     private final LocalDateTime dateTime;
 
-    private Transaction(UUID id, UUID payerId, UUID payeeId, Money amount, LocalDateTime dateTime) {
+    private Transaction(UUID id, Long payerId, Long payeeId, Money amount, LocalDateTime dateTime) {
         this.id = id;
         this.payerId = payerId;
         this.payeeId = payeeId;
@@ -22,7 +23,7 @@ public class Transaction {
         this.dateTime = dateTime;
     }
 
-    public static Transaction create(UUID payerId, UUID payeeId, Money amount) {
+    public static Transaction create(Long payerId, Long payeeId, Money amount) {
         if (payerId == null)
             throw new TransactionDomainException("Payer cannot be null");
         if (payeeId == null)
@@ -32,7 +33,7 @@ public class Transaction {
         return new Transaction(UUID.randomUUID(), payerId, payeeId, amount, LocalDateTime.now());
     }
 
-    public static Transaction restore(UUID id, UUID payerId, UUID payeeId, Money amount, LocalDateTime dateTime) {
+    public static Transaction restore(UUID id, Long payerId, Long payeeId, Money amount, LocalDateTime dateTime) {
         if (id == null)
             throw new TransactionDomainException("Transaction ID cannot be null");
         if (payerId == null)
@@ -46,11 +47,11 @@ public class Transaction {
         return id;
     }
 
-    public UUID getPayerId() {
+    public Long getPayerId() {
         return payerId;
     }
 
-    public UUID getPayeeId() {
+    public Long getPayeeId() {
         return payeeId;
     }
 
@@ -60,5 +61,18 @@ public class Transaction {
 
     public LocalDateTime getDateTime() {
         return dateTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
