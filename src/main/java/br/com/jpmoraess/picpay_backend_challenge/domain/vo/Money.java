@@ -24,6 +24,10 @@ public class Money {
         return this.amount != null && this.amount.compareTo(money.getAmount()) > 0;
     }
 
+    public boolean isGreaterThanOrEqual(Money money) {
+        return this.amount != null && this.amount.compareTo(money.getAmount()) >= 0;
+    }
+
     public Money add(Money money) {
         return new Money(setScale(this.amount.add(money.getAmount())));
     }
@@ -34,6 +38,10 @@ public class Money {
 
     public Money multiply(int multiplier) {
         return new Money(setScale(this.amount.multiply(new BigDecimal(multiplier))));
+    }
+
+    public Money negate() {
+        return new Money(setScale(this.amount.negate()));
     }
 
     private BigDecimal setScale(BigDecimal input) {

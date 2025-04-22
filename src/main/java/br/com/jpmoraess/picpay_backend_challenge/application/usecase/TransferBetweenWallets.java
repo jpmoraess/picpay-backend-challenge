@@ -6,6 +6,7 @@ import br.com.jpmoraess.picpay_backend_challenge.application.repository.WalletRe
 import br.com.jpmoraess.picpay_backend_challenge.domain.entity.Entry;
 import br.com.jpmoraess.picpay_backend_challenge.domain.entity.Transfer;
 import br.com.jpmoraess.picpay_backend_challenge.domain.entity.Wallet;
+import br.com.jpmoraess.picpay_backend_challenge.domain.exception.TransferDomainException;
 import br.com.jpmoraess.picpay_backend_challenge.domain.exception.WalletNotFoundException;
 import br.com.jpmoraess.picpay_backend_challenge.domain.vo.Money;
 import org.springframework.stereotype.Component;
@@ -28,35 +29,55 @@ public class TransferBetweenWallets {
 
     @Transactional
     public TransferOutput execute(TransferInput input) {
+        validateInput(input);
         Wallet payer, payee;
         if (input.payerId() < input.payeeId()) {
-            payer = walletRepository.findForUpdate(input.payerId())
-                    .orElseThrow(() -> new WalletNotFoundException("Payer wallet not found"));
-            payee = walletRepository.findForUpdate(input.payeeId())
-                    .orElseThrow(() -> new WalletNotFoundException("Payee wallet not found"));
+            payer = lockWallet(input.payerId());
+            payee = lockWallet(input.payeeId());
         } else {
-            payee = walletRepository.findForUpdate(input.payeeId())
-                    .orElseThrow(() -> new WalletNotFoundException("Payee wallet not found"));
-            payer = walletRepository.findForUpdate(input.payerId())
-                    .orElseThrow(() -> new WalletNotFoundException("Payer wallet not found"));
+            payee = lockWallet(input.payeeId());
+            payer = lockWallet(input.payerId());
         }
-
-        Transfer transfer = Transfer.create(input.payerId(), input.payeeId(), new Money(input.amount()));
-        transferRepository.save(transfer);
-
-        Entry payerEntry = Entry.create(input.payerId(), new Money(input.amount().negate()));
-        Entry payeeEntry = Entry.create(input.payeeId(), new Money(input.amount()));
-        entryRepository.save(payerEntry);
-        entryRepository.save(payeeEntry);
-
-        payer.debit(new Money(input.amount()));
-        payee.credit(new Money(input.amount()));
-        walletRepository.save(payer);
-        walletRepository.save(payee);
-
-        return TransferOutput.of(transfer, payer, payee, payerEntry, payeeEntry);
+        Money amount = new Money(input.amount());
+        validatePayerBalance(payer, amount);
+        Transfer transfer = createAndSaveTransfer(input, amount);
+        createAndSaveEntry(input.payerId(), amount.negate());
+        createAndSaveEntry(input.payeeId(), amount);
+        updateWalletBalances(payer, payee, amount);
+        return TransferOutput.of(transfer, payer, payee);
     }
 
+    private void validateInput(TransferInput input) {
+        if (input.payerId().equals(input.payeeId()))
+            throw new TransferDomainException("Cannot transfer to your own wallet");
+    }
+
+    private void validatePayerBalance(Wallet payer, Money amount) {
+        if (!payer.getBalance().isGreaterThanOrEqual(amount))
+            throw new TransferDomainException("Payer does not have funds to transact");
+    }
+
+    private Wallet lockWallet(Long walletId) {
+        return walletRepository.findForUpdate(walletId)
+                .orElseThrow(() -> new WalletNotFoundException(String.format("Wallet with id %d not found", walletId)));
+    }
+
+    private Transfer createAndSaveTransfer(TransferInput input, Money amount) {
+        Transfer transfer = Transfer.create(input.payerId(), input.payeeId(), amount);
+        return transferRepository.save(transfer);
+    }
+
+    private void createAndSaveEntry(Long walletId, Money amount) {
+        Entry entry = Entry.create(walletId, amount);
+        entryRepository.save(entry);
+    }
+
+    private void updateWalletBalances(Wallet payer, Wallet payee, Money amount) {
+        payer.debit(amount);
+        payee.credit(amount);
+        walletRepository.save(payer);
+        walletRepository.save(payee);
+    }
 
     public record TransferInput(Long payerId, Long payeeId, BigDecimal amount) {
         public static TransferInput of(Long payerId, Long payeeId, BigDecimal amount) {
@@ -64,9 +85,9 @@ public class TransferBetweenWallets {
         }
     }
 
-    public record TransferOutput(Transfer transfer, Wallet payer, Wallet payee, Entry payerEntry, Entry payeeEntry) {
-        public static TransferOutput of(Transfer transfer, Wallet payer, Wallet payee, Entry payerEntry, Entry payeeEntry) {
-            return new TransferOutput(transfer, payer, payee, payerEntry, payeeEntry);
+    public record TransferOutput(Transfer transfer, Wallet payer, Wallet payee) {
+        public static TransferOutput of(Transfer transfer, Wallet payer, Wallet payee) {
+            return new TransferOutput(transfer, payer, payee);
         }
     }
 }
